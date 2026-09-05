@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { ROLES, CITIZEN_PROJECT_STATUS } from '../../utils/constants';
 import projectService from '../../services/projectService';
 import RiskBadge from '../../components/cases/RiskBadge';
 import Loader from '../../components/common/Loader';
@@ -7,8 +9,11 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 
 const ProjectDetails = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const isCitizen = user?.role === ROLES.CITIZEN;
 
   useEffect(() => {
     projectService.getProjectById(id).then((data) => {
@@ -19,6 +24,16 @@ const ProjectDetails = () => {
 
   if (loading) return <Loader fullPage />;
   if (!project) return <div>Project not found.</div>;
+
+  const getCitizenStatus = () => {
+    if (project.completionRate >= 100 || project.status === 'COMPLETED') {
+      return CITIZEN_PROJECT_STATUS.COMPLETED;
+    }
+    if (project.status === 'PLANNED') {
+      return CITIZEN_PROJECT_STATUS.PENDING;
+    }
+    return CITIZEN_PROJECT_STATUS.ONGOING;
+  };
 
   return (
     <div>
@@ -40,11 +55,29 @@ const ProjectDetails = () => {
             Jurisdiction: {project.district}, {project.state}
           </p>
         </div>
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <RiskBadge level={project.riskLevel} />
-          <Link to={`/cases?projectId=${project.id}`} className="btn btn-primary btn-sm">
-            View Anomaly Case Dossier
-          </Link>
+          {isCitizen ? (
+            <span
+              style={{
+                padding: '0.3rem 0.8rem',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: '#dcfce7',
+                color: '#15803d',
+                fontWeight: 700,
+                fontSize: '0.8125rem',
+              }}
+            >
+              {getCitizenStatus()}
+            </span>
+          ) : (
+            <>
+              <RiskBadge level={project.riskLevel} />
+              <Link to={`/cases?projectId=${project.id}`} className="btn btn-primary btn-sm">
+                View Anomaly Case Dossier
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -52,18 +85,18 @@ const ProjectDetails = () => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: `repeat(auto-fit, minmax(220px, 1fr))`,
           gap: '1rem',
           marginBottom: '1.5rem',
         }}
       >
         <div className="card">
-          <div className="stat-title">Sanctioned Outlay</div>
+          <div className="stat-title">Sanctioned Public Outlay</div>
           <div className="stat-value" style={{ fontSize: '1.35rem' }}>{formatCurrency(project.sanctionedAmount)}</div>
         </div>
         <div className="card">
           <div className="stat-title">Disbursed Expenditure</div>
-          <div className="stat-value" style={{ fontSize: '1.35rem', color: 'var(--risk-critical)' }}>
+          <div className="stat-value" style={{ fontSize: '1.35rem', color: isCitizen ? 'inherit' : 'var(--risk-critical)' }}>
             {formatCurrency(project.expenditure)}
           </div>
         </div>
@@ -71,56 +104,62 @@ const ProjectDetails = () => {
           <div className="stat-title">Physical Progress</div>
           <div className="stat-value" style={{ fontSize: '1.35rem' }}>{project.completionRate}%</div>
         </div>
-        <div className="card">
-          <div className="stat-title">Calculated Anomaly Index</div>
-          <div className="stat-value" style={{ fontSize: '1.35rem', color: 'var(--risk-critical)' }}>
-            {project.anomalyScore}/100
+        {!isCitizen && (
+          <div className="card">
+            <div className="stat-title">Calculated Anomaly Index</div>
+            <div className="stat-value" style={{ fontSize: '1.35rem', color: 'var(--risk-critical)' }}>
+              {project.anomalyScore}/100
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Flagged Rules & Contractor Details */}
-      <div className="dashboard-grid-2">
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">Algorithmic Anomaly Flags</h3>
+      {/* Detail Columns */}
+      <div className={isCitizen ? 'card' : 'dashboard-grid-2'}>
+        {!isCitizen && (
+          <div className="card">
+            <div className="card-header">
+              <h3 className="card-title">Algorithmic Anomaly Flags</h3>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {project.flaggedAnomalies?.map((flag, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.75rem',
+                    padding: '0.75rem 1rem',
+                    backgroundColor: '#fef2f2',
+                    borderLeft: '4px solid var(--risk-critical)',
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: '0.875rem',
+                    color: '#991b1b',
+                  }}
+                >
+                  <span>⚠️</span>
+                  <span>{flag}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {project.flaggedAnomalies?.map((flag, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '0.75rem',
-                  padding: '0.75rem 1rem',
-                  backgroundColor: '#fef2f2',
-                  borderLeft: '4px solid var(--risk-critical)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.875rem',
-                  color: '#991b1b',
-                }}
-              >
-                <span>⚠️</span>
-                <span>{flag}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
 
-        <div className="card">
+        <div className={isCitizen ? '' : 'card'}>
           <div className="card-header">
-            <h3 className="card-title">Contractor & Tender Metadata</h3>
+            <h3 className="card-title">{isCitizen ? 'Public Execution Details' : 'Contractor & Tender Metadata'}</h3>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.875rem' }}>
             <div>
-              <span style={{ color: 'var(--text-muted)' }}>Prime Contractor:</span>
+              <span style={{ color: 'var(--text-muted)' }}>Executing Contractor:</span>
               <div style={{ fontWeight: 600 }}>{project.vendorName}</div>
             </div>
-            <div>
-              <span style={{ color: 'var(--text-muted)' }}>Contractor GSTIN:</span>
-              <div style={{ fontWeight: 600 }}>{project.contractorGstin}</div>
-            </div>
+            {!isCitizen && (
+              <div>
+                <span style={{ color: 'var(--text-muted)' }}>Contractor GSTIN:</span>
+                <div style={{ fontWeight: 600 }}>{project.contractorGstin}</div>
+              </div>
+            )}
             <div>
               <span style={{ color: 'var(--text-muted)' }}>Work Commenced:</span>
               <div style={{ fontWeight: 600 }}>{formatDate(project.startDate)}</div>

@@ -53,11 +53,7 @@ const Login = () => {
               An automated, intelligence-driven oversight system designed to safeguard public expenditure,
               detect collusive procurement, and identify financial leakage across national and state schemes.
             </p>
-            <img
-              src="/src/assets/images/login-illustration.png"
-              alt="Public finance monitoring"
-              className="auth-illustration"
-            />
+
           </div>
 
           <div className="auth-sidebar-footer">
@@ -69,7 +65,7 @@ const Login = () => {
           <div className="auth-card">
             <div className="auth-header">
               <h1>Officer Sign In</h1>
-              <p>Enter your authorized government credentials to access the portal.</p>
+              <p>Enter your authorized government credentials to access the portal</p>
             </div>
 
             <div className="auth-tabs">

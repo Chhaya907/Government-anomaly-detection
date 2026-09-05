@@ -1,29 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ROLES } from '../../utils/constants';
+import { ROLES, ROLE_LABELS } from '../../utils/constants';
+import { getNavItemsForRole } from '../../utils/roleUtils';
 import logoImg from '../../assets/images/logo.png';
 
 const Sidebar = () => {
   const { user } = useAuth();
-  const role = user?.role || ROLES.MOSPI;
-
-  const getDashboardPath = () => {
-    switch (role) {
-      case ROLES.MOSPI:
-        return '/dashboard/mospi';
-      case ROLES.DISTRICT:
-        return '/dashboard/district';
-      case ROLES.AUDITOR:
-        return '/dashboard/auditor';
-      case ROLES.MP:
-        return '/dashboard/mp';
-      case ROLES.CITIZEN:
-        return '/dashboard/citizen';
-      default:
-        return '/dashboard/mospi';
-    }
-  };
+  const role = user?.role || ROLES.CITIZEN;
+  const navSections = getNavItemsForRole(role);
 
   return (
     <aside className="sidebar">
@@ -36,56 +21,21 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar-nav">
-        <div className="nav-section-title">Core Overview</div>
-        <NavLink
-          to={getDashboardPath()}
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">📊</span>
-          <span>Role Dashboard</span>
-        </NavLink>
-
-        <div className="nav-section-title" style={{ marginTop: '1rem' }}>Investigation & Audit</div>
-        <NavLink
-          to="/projects"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">📁</span>
-          <span>Public Projects</span>
-        </NavLink>
-
-        <NavLink
-          to="/cases"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">🚨</span>
-          <span>Anomaly Cases</span>
-        </NavLink>
-
-        <NavLink
-          to="/vendors"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">🏢</span>
-          <span>Contractor Watch</span>
-        </NavLink>
-
-        <NavLink
-          to="/reports"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">📄</span>
-          <span>Audit Reports</span>
-        </NavLink>
-
-        <div className="nav-section-title" style={{ marginTop: '1rem' }}>Preferences</div>
-        <NavLink
-          to="/settings"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          <span className="nav-icon">⚙️</span>
-          <span>System Settings</span>
-        </NavLink>
+        {navSections.map((section, sIdx) => (
+          <div key={sIdx} style={{ marginTop: sIdx > 0 ? '1rem' : '0' }}>
+            <div className="nav-section-title">{section.sectionTitle}</div>
+            {section.items.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              >
+                <span className="nav-icon">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </div>
+        ))}
       </nav>
 
       <div className="sidebar-footer">
@@ -94,8 +44,8 @@ const Sidebar = () => {
             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="user-info">
-            <div className="user-name">{user?.name || 'Authorized Officer'}</div>
-            <div className="user-role">{role} Access</div>
+            <div className="user-name">{user?.name || 'Portal User'}</div>
+            <div className="user-role">{ROLE_LABELS[role] || role}</div>
           </div>
         </div>
       </div>

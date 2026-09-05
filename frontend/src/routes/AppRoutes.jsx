@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { ROLES } from '../utils/constants';
 import { getHomeRouteForRole } from '../utils/roleUtils';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -29,6 +30,8 @@ import CaseDetails from '../pages/cases/CaseDetails';
 import Vendors from '../pages/vendors/Vendors';
 import VendorDetails from '../pages/vendors/VendorDetails';
 import Reports from '../pages/reports/Reports';
+import PublicReports from '../pages/reports/PublicReports';
+import Revisions from '../pages/revisions/Revisions';
 import Settings from '../pages/settings/Settings';
 
 const RootRedirect = () => {
@@ -60,22 +63,121 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        {/* Role Dashboards */}
-        <Route path="/dashboard/mospi" element={<MoSPIDashboard />} />
-        <Route path="/dashboard/district" element={<DistrictDashboard />} />
-        <Route path="/dashboard/auditor" element={<AuditorDashboard />} />
-        <Route path="/dashboard/mp" element={<MPDashboard />} />
-        <Route path="/dashboard/citizen" element={<CitizenDashboard />} />
+        {/* Role-Specific Dashboards */}
+        <Route
+          path="/dashboard/mospi"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI]}>
+              <MoSPIDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/district"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.DISTRICT]}>
+              <DistrictDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/auditor"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.AUDITOR]}>
+              <AuditorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/mp"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MP]}>
+              <MPDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/citizen"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.CITIZEN]}>
+              <CitizenDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Feature Routes */}
+        {/* Projects (Publicly accessible with role-masked columns) */}
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetails />} />
-        <Route path="/cases" element={<Cases />} />
-        <Route path="/cases/:id" element={<CaseDetails />} />
-        <Route path="/vendors" element={<Vendors />} />
-        <Route path="/vendors/:id" element={<VendorDetails />} />
-        <Route path="/reports" element={<Reports />} />
-        <Route path="/settings" element={<Settings />} />
+
+        {/* Public Reports for Citizen & all roles */}
+        <Route path="/public-reports" element={<PublicReports />} />
+
+        {/* Anomaly Cases (Confidential: MoSPI, District Officer, Auditor only) */}
+        <Route
+          path="/cases"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.DISTRICT, ROLES.AUDITOR]}>
+              <Cases />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cases/:id"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.DISTRICT, ROLES.AUDITOR]}>
+              <CaseDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Contractor Watch & Cartel Analysis (MoSPI, Auditor only) */}
+        <Route
+          path="/vendors"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.AUDITOR]}>
+              <Vendors />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/vendors/:id"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.AUDITOR]}>
+              <VendorDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Project Revisions & Audit Log (MoSPI Admin reviews, District Officer submits) */}
+        <Route
+          path="/revisions"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.DISTRICT]}>
+              <Revisions />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Internal Statutory Audit Reports (MoSPI, District, Auditor, MP) */}
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI, ROLES.DISTRICT, ROLES.AUDITOR, ROLES.MP]}>
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* System Settings & Model Sensitivity (MoSPI Admin only) */}
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.MOSPI]}>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       {/* Fallback */}
