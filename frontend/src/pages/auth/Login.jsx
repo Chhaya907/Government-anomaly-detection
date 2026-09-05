@@ -5,6 +5,7 @@ import { ROLES, ROLE_LABELS } from '../../utils/constants';
 import { getHomeRouteForRole } from '../../utils/roleUtils';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import logoImg from '../../assets/images/logo.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,7 +38,7 @@ const Login = () => {
       <div className="auth-container">
         <div className="auth-sidebar">
           <div className="auth-sidebar-header">
-            <img src="/assets/logo.png" alt="Emblem" className="auth-sidebar-logo" />
+            <img src={logoImg} alt="Emblem" className="auth-sidebar-logo" />
             <div>
               <div className="auth-sidebar-title">Government of India</div>
               <div className="auth-sidebar-subtitle">Ministry of Statistics & Programme Implementation</div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROLES } from '../../utils/constants';
+import logoImg from '../../assets/images/logo.png';
 
 const Sidebar = () => {
   const { user } = useAuth();
@@ -27,7 +28,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <img src="/assets/logo.png" alt="National Emblem / Portal" className="sidebar-logo" />
+        <img src={logoImg} alt="National Emblem / Portal" className="sidebar-logo" />
         <div>
           <div className="sidebar-title">NPF-ADS</div>
           <div className="sidebar-subtitle">Finance Anomaly Portal</div>

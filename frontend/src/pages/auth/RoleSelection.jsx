@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROLES, ROLE_LABELS } from '../../utils/constants';
 import { getHomeRouteForRole } from '../../utils/roleUtils';
+import logoImg from '../../assets/images/logo.png';
 
 const RoleSelection = () => {
   const { switchRole } = useAuth();
@@ -51,7 +52,7 @@ const RoleSelection = () => {
     <div className="auth-page" style={{ justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
       <div className="card" style={{ maxWidth: '800px', width: '100%', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <img src="/assets/logo.png" alt="Emblem" style={{ width: '60px', marginBottom: '0.75rem' }} />
+          <img src={logoImg} alt="Emblem" style={{ width: '60px', marginBottom: '0.75rem' }} />
           <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-navy)' }}>
             Select Portal Persona
           </h2>

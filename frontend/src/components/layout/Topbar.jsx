@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ROLES, ROLE_LABELS } from '../../utils/constants';
 import Button from '../common/Button';
+import logoImg from '../../assets/images/logo.png';
 
 const Topbar = () => {
   const { user, switchRole, logout } = useAuth();
@@ -40,6 +41,7 @@ const Topbar = () => {
   return (
     <header className="topbar">
       <div className="topbar-left">
+        <img src={logoImg} alt="Portal Emblem" style={{ width: '32px', height: '32px', borderRadius: '4px' }} />
         <h1 className="page-title">National Public Finance Anomaly Portal</h1>
       </div>
 

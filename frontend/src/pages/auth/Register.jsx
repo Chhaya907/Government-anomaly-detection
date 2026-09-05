@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ROLES, ROLE_LABELS } from '../../utils/constants';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import logoImg from '../../assets/images/logo.png';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const Register = () => {
       <div className="auth-container">
         <div className="auth-sidebar">
           <div className="auth-sidebar-header">
-            <img src="/assets/logo.png" alt="Emblem" className="auth-sidebar-logo" />
+            <img src={logoImg} alt="Emblem" className="auth-sidebar-logo" />
             <div>
               <div className="auth-sidebar-title">Government of India</div>
               <div className="auth-sidebar-subtitle">Officer Onboarding System</div>
