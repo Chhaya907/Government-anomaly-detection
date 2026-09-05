@@ -1,0 +1,9 @@
+export { default as dashboardIcon } from './dashboard.svg';
+export { default as projectIcon } from './project.svg';
+export { default as caseIcon } from './case.svg';
+export { default as vendorIcon } from './vendor.svg';
+export { default as reportIcon } from './report.svg';
+export { default as settingsIcon } from './settings.svg';
+export { default as alertIcon } from './alert.svg';
+export { default as shieldIcon } from './shield.svg';
+export { default as userIcon } from './user.svg';

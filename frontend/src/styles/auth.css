@@ -1,0 +1,252 @@
+/* Authentication Pages Styles */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  background-color: #f8fafc;
+}
+
+.auth-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.auth-sidebar {
+  flex: 1;
+  background: linear-gradient(135deg, #091a2e 0%, #0e2a47 60%, #173d66 100%);
+  color: #ffffff;
+  padding: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-sidebar::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(243, 112, 33, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.auth-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auth-sidebar-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  padding: 4px;
+}
+
+.auth-sidebar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.auth-sidebar-subtitle {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.auth-sidebar-body {
+  margin: 2rem 0;
+}
+
+.auth-sidebar-body h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1.25rem;
+}
+
+.auth-sidebar-body h2 span {
+  color: #f37021;
+}
+
+.auth-sidebar-body p {
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.auth-illustration {
+  margin-top: 2rem;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.auth-sidebar-footer {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+
+.auth-main {
+  flex: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.auth-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.auth-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.auth-tabs {
+  display: flex;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.75rem;
+  gap: 4px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.auth-tab.active {
+  background: #ffffff;
+  color: var(--primary-navy);
+  box-shadow: var(--shadow-sm);
+}
+
+.role-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.role-option-card {
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: #fff;
+}
+
+.role-option-card:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+.role-option-card.selected {
+  border-color: var(--primary-navy);
+  background-color: #f0f7ff;
+}
+
+.role-option-card .role-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.role-option-card .role-name {
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: var(--primary-navy);
+}
+
+.role-option-card .role-desc {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.auth-footer {
+  margin-top: 1.75rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--primary-navy);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.otp-inputs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+}
+
+.otp-digit {
+  width: 48px;
+  height: 52px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.otp-digit:focus {
+  border-color: var(--primary-navy);
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .auth-sidebar {
+    display: none;
+  }
+  .auth-main {
+    padding: 1.5rem;
+  }
+}
