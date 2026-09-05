@@ -1,0 +1,23 @@
+{
+  "explorer.compactFolders": false,
+  "files.autoSave": "afterDelay",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.venv": true
+  },
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.jsx": "javascriptreact",
+    "*.css": "css"
+  }
+}

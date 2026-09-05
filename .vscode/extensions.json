@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.debugpy",
+    "dsznajder.es7-react-js-snippets",
+    "pkief.material-icon-theme"
+  ]
+}
