@@ -1,43 +1,51 @@
-import React from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import StatCard from '../../components/dashboard/StatCard';
 import RiskChart from '../../components/dashboard/RiskChart';
 import DistrictChart from '../../components/dashboard/DistrictChart';
 import RecentAlerts from '../../components/dashboard/RecentAlerts';
 import CaseTable from '../../components/cases/CaseTable';
+import api from '../../services/api';
 
 const MoSPIDashboard = () => {
-  const flaggedCases = [
-    {
-      id: 'CASE-7801',
-      projectId: 'PRJ-2024-001',
-      projectName: 'District Rural Road Connectivity Phase II',
-      district: 'Varanasi',
-      primaryAnomaly: 'Cost Escalation & Collusive Bidding',
-      financialExposure: 42000000,
-      riskLevel: 'CRITICAL',
-      status: 'OPEN',
-    },
-    {
-      id: 'CASE-7802',
-      projectId: 'PRJ-2024-002',
-      projectName: 'Solar Powered Drinking Water Units',
-      district: 'Patna',
-      primaryAnomaly: 'Ghost Contractor & Unverified Invoices',
-      financialExposure: 26000000,
-      riskLevel: 'CRITICAL',
-      status: 'UNDER_INVESTIGATION',
-    },
-    {
-      id: 'CASE-7803',
-      projectId: 'PRJ-2024-004',
-      projectName: 'Smart Drainage & Stormwater Channel',
-      district: 'Pune',
-      primaryAnomaly: 'Unbalanced Bid Item Rates',
-      financialExposure: 18500000,
-      riskLevel: 'HIGH',
-      status: 'ESCALATED',
-    },
-  ];
+  const [metrics, setMetrics] = useState(null);
+  const [flaggedCases, setFlaggedCases] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        const [metricsResponse, alertsResponse] = await Promise.all([
+          api.get('/dashboard/metrics'),
+          api.get('/dashboard/recent-alerts'),
+        ]);
+
+        setMetrics(metricsResponse.data);
+
+        const formattedCases = alertsResponse.data.map((alert) => ({
+          id: alert.case_id,
+          projectId: 'PROJECT-' + alert.case_id,
+          projectName: alert.project,
+          district: alert.district,
+          primaryAnomaly: 'Financial anomaly detected',
+          financialExposure: alert.financial_exposure * 10000000,
+          riskLevel: alert.risk_level,
+          status: alert.status,
+        }));
+
+        setFlaggedCases(formattedCases);
+      } catch (error) {
+        console.error('Failed to load dashboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboard();
+  }, []);
+
+  if (loading) {
+    return <div style={{ padding: '2rem' }}>Loading dashboard...</div>;
+  }
 
   return (
     <div>
@@ -50,55 +58,61 @@ const MoSPIDashboard = () => {
         </p>
       </div>
 
-      {/* Stats Cards */}
       <div className="stats-grid">
         <StatCard
           title="Monitored Projects"
-          value="1,420"
-          trend="12 added this week"
+          value={metrics?.monitored_projects?.toLocaleString() || '0'}
+          trend="Live backend data"
           trendType="neutral"
-          icon="🏛️"
+          icon="📊"
         />
+
         <StatCard
           title="Sanctioned Outlay"
-          value="₹5,240 Cr"
-          trend="Across 6 schemes"
+          value={`₹${metrics?.sanctioned_outlay || 0} Cr`}
+          trend="Live backend data"
           trendType="neutral"
           icon="💰"
         />
+
         <StatCard
           title="Flagged Anomalies"
-          value="114"
-          trend="+8% from last month"
+          value={metrics?.flagged_anomalies || 0}
+          trend="Live backend data"
           trendType="negative"
           icon="🚨"
         />
+
         <StatCard
           title="Potential Financial Risk"
-          value="₹142.6 Cr"
-          trend="Requires CAG inquiry"
+          value={`₹${metrics?.potential_financial_risk || 0} Cr`}
+          trend="Requires investigation"
           trendType="negative"
           icon="⚠️"
         />
       </div>
 
-      {/* Grid: Risk & District Charts */}
       <div className="dashboard-grid-2">
         <RiskChart />
         <DistrictChart />
       </div>
 
-      {/* Recent Alerts & Table */}
       <div className="dashboard-grid-2">
         <div className="card">
           <div className="card-header">
             <div>
-              <h3 className="card-title">Priority Anomalies Requiring Inter-Ministry Action</h3>
-              <p className="card-subtitle">Showing cases with risk index &gt; 80</p>
+              <h3 className="card-title">
+                Priority Anomalies Requiring Inter-Ministry Action
+              </h3>
+              <p className="card-subtitle">
+                Live anomaly data from backend
+              </p>
             </div>
           </div>
+
           <CaseTable cases={flaggedCases} />
         </div>
+
         <RecentAlerts />
       </div>
     </div>
