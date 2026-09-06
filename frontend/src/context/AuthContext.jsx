@@ -97,7 +97,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const switchRole = (newRole) => {
+  setUser((currentUser) => {
+    if (!currentUser) return currentUser;
+
+    const updatedUser = {
+      ...currentUser,
+      role: newRole,
+    };
+
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    return updatedUser;
+  });
+};
+
+const logout = () => {
     authService.logout();
 
     setUser(null);
@@ -115,6 +129,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         login,
         loginAsCitizen,
+        switchRole,
         logout,
       }}
     >
@@ -136,3 +151,5 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
+
+
