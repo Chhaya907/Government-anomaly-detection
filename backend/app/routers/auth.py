@@ -57,6 +57,7 @@ def login(
     token = create_user_token(user)
 
     return {
+        "token": token,
         "access_token": token,
         "token_type": "bearer",
         "user": user,

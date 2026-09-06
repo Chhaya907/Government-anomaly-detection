@@ -23,8 +23,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login({ email, password, role: selectedRole });
-      const targetRoute = getHomeRouteForRole(selectedRole);
+      const authenticatedUser = await login({ email, password });
+      const targetRoute = getHomeRouteForRole(authenticatedUser.role);
       navigate(targetRoute);
     } catch (err) {
       setError(err.message || 'Authentication failed. Please verify credentials.');
@@ -152,3 +152,4 @@ const Login = () => {
 };
 
 export default Login;
+
